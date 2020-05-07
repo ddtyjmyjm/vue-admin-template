@@ -69,12 +69,23 @@ export const constantRoutes = [
   {
     path: '/course',
     component: Layout,
-    children: [{
-      path: 'table',
-      name: 'course',
-      component: () => import('@/views/course'),
-      meta: { title: 'course', icon: 'table' }
-    }]
+    redirect: '/course/table',
+    //  name: 'course',
+    //  meta: { title: 'course', icon: 'example' },
+    children: [
+      {
+        path: 'table',
+        name: 'course',
+        component: () => import('@/views/course'),
+        meta: { title: 'course', icon: 'table' }
+      },
+      {
+        path: 'create',
+        name: 'create course',
+        component: () => import('@/views/courseManage'),
+        hidden: true
+      }
+    ]
   },
 
   {
