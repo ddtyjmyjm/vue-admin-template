@@ -31,7 +31,7 @@ export default {
     courseOfferings: []
   }),
   mounted() {
-    getList(2).then(
+    getList(this.$store.getters.token).then(
       response => {
         this.courseOfferings = response.data
       }
