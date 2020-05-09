@@ -1,17 +1,48 @@
-import axios from 'axios'
+import request from '@/utils/request'
+
 export function findAll() {
-  return axios
-    .get('http://localhost:8080/course/findAll')
+  return request({
+    url: '/course/findAll',
+    method: 'get'
+  })
 }
 
 export function findById(id) {
-  return axios.get('http://localhost:8080/course/findById', { params: { id: id }})
+  return request({
+    url: '/course/findById',
+    method: 'get',
+    params: { id }
+  })
 }
 
 export function findByName(name) {
-  return axios.get('http://localhost:8080/course/findByName', { params: { name: name }})
+  return request({
+    url: '/course/findByName',
+    method: 'get',
+    params: { name }
+  })
 }
 
-export function createCourse(course) {
-  return axios.post('http://localhost:8080/teacher/createCourse', course)
+export function createCourse(data) {
+  return request({
+    url: '/teacher/createCourse',
+    method: 'post',
+    data
+  })
+}
+
+export function updateCourse(data) {
+  return request({
+    url: '/teacher/updateCourse',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteCourseList(data) {
+  return request({
+    url: '/teacher/deleteCourse',
+    method: 'post',
+    data
+  })
 }

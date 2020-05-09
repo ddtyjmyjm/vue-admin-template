@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { findAll, findByName, findById, createCourse } from '@/api/course'
+import { findAll, findByName, findById, createCourse, updateCourse, deleteCourseList } from '@/api/course'
 
 export default {
   name: 'Course',
@@ -117,7 +117,7 @@ export default {
   methods: {
     getList: function() {
       findAll().then(response => {
-        this.courseList = response.data
+        this.courseList = JSON.parse(response.data.courseList)
       })
     },
     resetList: function() {
@@ -136,13 +136,13 @@ export default {
         if (this.select === 'id') {
           findById(this.input).then(response => {
             this.resetList()
-            this.courseList = [response.data]
+            this.courseList = [JSON.parse(response.data.courseList)]
           })
         }
         if (this.select === 'name') {
           findByName(this.input).then(response => {
             this.resetList()
-            this.courseList = response.data
+            this.courseList = JSON.parse(response.data.courseList)
           })
         }
       }
@@ -167,7 +167,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           createCourse(this.dialog.tempCourse).then(() => {
-            this.courseList.unshift(this.dialog.tempCourse)
+            this.getList()
             this.dialog.formVisible = false
             this.$notify({
               title: '成功',
@@ -190,9 +190,8 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createCourse(this.dialog.tempCourse).then(() => {
-            const index = this.courseList.findIndex(v => v.id === this.dialog.tempCourse.id)
-            this.courseList.splice(index, 1, this.dialog.tempCourse)
+          updateCourse(this.dialog.tempCourse).then(() => {
+            this.getList()
             this.dialog.formVisible = false
             this.$notify({
               title: '成功',
@@ -204,7 +203,8 @@ export default {
         }
       })
     },
-    handleDelete(row,index) {
+    handleDelete(row, index) {
+      deleteCourseList([row.id])
       this.$notify({
         title: '成功',
         message: '删除成功',
