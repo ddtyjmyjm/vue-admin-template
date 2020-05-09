@@ -1,65 +1,218 @@
 <template>
-  <div id="app">
-    <router-link to="/course/create"><el-button type="primary">添加课程</el-button></router-link>
-    <el-input v-model="input" placeholder="搜索课程" class="input-with-select">
-      <el-select slot="prepend" v-model="select" placeholder="请选择">
+  <div class="app-container">
+
+    <div class="filter-container">
+
+      <el-select v-model="select" placeholder="请选择" class="filter-item" style="width: 100px">
         <el-option label="id" value="id" />
         <el-option label="课程名" value="name" />
       </el-select>
-      <el-button slot="append" icon="el-icon-search" @click="search" />
-    </el-input>
+
+      <el-input
+        v-model="input"
+        placeholder="搜索课程"
+        style="width: 200px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        搜索
+      </el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">
+        添加课程
+      </el-button>
+    </div>
 
     <el-table :data="courseList" style="width: 100%">
-      <el-table-column prop="id" label="id" width="180" />
-      <el-table-column prop="name" label="课程名" width="180" />
+      <el-table-column prop="id" align="center" label="id" width="50px" />
+      <el-table-column prop="name" align="center" label="课程名" width="100px" />
       <el-table-column prop="description" label="课程描述" />
-      <el-table-column fixed="right" label="操作" width="100">
-        <template slot-scope="scope">
-          <el-button type="text" size="small">查看</el-button>
-          <el-button type="text" size="small" @click="editCourse(scope.row)">编辑</el-button>
+      <el-table-column label="操作" width="200px">
+        <template slot-scope="{row,$index}">
+          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+            编辑
+          </el-button>
+          <el-button v-if="row.status!=='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
+            删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog :title="dialog.textMap[dialog.dialogStatus]" :visible.sync="dialog.formVisible">
+      <el-form ref="dataForm" :model="dialog.tempCourse" :rules="dialog.rules" label-position="left" label-width="80px">
+        <el-form-item label="课程名称" prop="name">
+          <el-input
+            v-model="dialog.tempCourse.name"
+            placeholder="请输入内容"
+            maxlength="20"
+            show-word-limit
+          />
+        </el-form-item>
+        <el-form-item label="课程描述">
+          <el-input
+            v-model="dialog.tempCourse.description"
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 4}"
+            placeholder="请输入内容"
+          />
+        </el-form-item>
+        <el-form-item label="课程图片">
+          <el-input
+            v-model="dialog.tempCourse.course_img_url"
+            placeholder="请输入内容"
+          />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">
+          取消
+        </el-button>
+        <el-button type="primary" @click="dialog.dialogStatus==='create'?createData():updateData()">
+          确认
+        </el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { findAll, findByName, findById, createCourse } from '@/api/course'
 
 export default {
   name: 'Course',
   data: () => ({
     input: '',
-    select: 'id'
+    select: 'id',
+    courseList: [{
+      id: null,
+      name: '',
+      description: '',
+      course_img_url: ''
+    }],
+    statusOptions: ['published', 'draft', 'deleted'],
+    dialog: {
+      formVisible: false,
+      dialogStatus: '',
+      textMap: {
+        update: '编辑',
+        create: '创建'
+      },
+      tempCourse: {
+        id: null,
+        name: '',
+        description: '',
+        course_img_url: ''
+      },
+      rules: {
+        name: [{ required: true, message: '需要有名字', trigger: 'blur' }]
+      }
+    }
+
   }),
-  computed: {
-    ...mapGetters(['courseList'])
-  },
-  mounted() {
-    this.$store.dispatch('course/findAll')
+  created() {
+    this.getList()
   },
   methods: {
-    search: function() {
-      if (this.select === 'id') {
-        this.$store.dispatch('course/findById', {
-          id: this.input
-        })
-      } if (this.select === 'name') {
-        this.$store.dispatch('course/findByName', {
-          name: this.input
-        })
+    getList: function() {
+      findAll().then(response => {
+        this.courseList = response.data
+      })
+    },
+    resetList: function() {
+      this.courseList = [{
+        id: null,
+        name: '',
+        description: '',
+        course_img_url: ''
+      }]
+    },
+    handleFilter: function() {
+      if (this.input === '') {
+        this.resetList()
+        this.getList()
+      } else {
+        if (this.select === 'id') {
+          findById(this.input).then(response => {
+            this.resetList()
+            this.courseList = [response.data]
+          })
+        }
+        if (this.select === 'name') {
+          findByName(this.input).then(response => {
+            this.resetList()
+            this.courseList = response.data
+          })
+        }
       }
+    },
+    resetTemp() {
+      this.dialog.tempCourse = {
+        id: null,
+        name: '',
+        description: '',
+        course_img_url: ''
+      }
+    },
+    handleCreate() {
+      this.resetTemp()
+      this.dialog.dialogStatus = 'create'
+      this.dialog.formVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    createData() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          createCourse(this.dialog.tempCourse).then(() => {
+            this.courseList.unshift(this.dialog.tempCourse)
+            this.dialog.formVisible = false
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        }
+      })
+    },
+    handleUpdate(row) {
+      this.dialog.tempCourse = Object.assign({}, row)
+      this.dialog.dialogStatus = 'update'
+      this.dialog.formVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    updateData() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          createCourse(this.dialog.tempCourse).then(() => {
+            const index = this.courseList.findIndex(v => v.id === this.dialog.tempCourse.id)
+            this.courseList.splice(index, 1, this.dialog.tempCourse)
+            this.dialog.formVisible = false
+            this.$notify({
+              title: '成功',
+              message: '修改成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        }
+      })
+    },
+    handleDelete(row,index) {
+      this.$notify({
+        title: '成功',
+        message: '删除成功',
+        type: 'success',
+        duration: 2000
+      })
+      this.courseList.splice(index, 1)
     }
   }
 }
 </script>
-
-<style scoped>
- .input-with-select el-select {
-  width: 150px;
-}
-
-.input-with-select .el-input-group__prepend {
-  background-color: #fff;
-}
-</style>

@@ -1,19 +1,23 @@
 <template>
-  <div id="app">
-    <p>{{ message }}</p>
+  <div class="app-container">
     <el-button type="primary">添加开课课程</el-button>
     <div v-if="courseOfferings.length">
       <el-row :gutter="20">
+
         <div v-for="courseOffering in courseOfferings" :key="courseOffering.id">
+
           <el-col :span="8">
+
             <el-card class="box-card" :body-style="{ padding: '0px' } " shadow="hover">
               <div slot="header" class="clearfix">
                 <span>{{ courseOffering.course.name }}</span>
+                <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
               </div>
               <img :src="courseOffering.course.course_img_url" class="image">
 
               <div style="padding: 14px;">描述: {{ courseOffering.course.description }}</div>
             </el-card>
+
           </el-col>
         </div>
       </el-row>
@@ -41,6 +45,10 @@ export default {
 </script>
 
 <style scoped>
+  #app{
+    padding: 20px;
+  }
+
 .text {
   font-size: 14px;
 }
