@@ -8,10 +8,12 @@
 
           <el-col :span="8">
 
-            <el-card class="box-card" :body-style="{ padding: '0px' } " shadow="hover">
+            <el-card class="box-card" shadow="hover">
               <div slot="header" class="clearfix">
                 <span>{{ courseOffering.course.name }}</span>
-                <el-button style="float: right; padding: 3px 0" type="text">详情</el-button>
+                <router-link :to="{ name: 'courseOfferingDetail', params: { id: courseOffering.course.id}}">
+                  详情
+                </router-link>
               </div>
               <img :src="courseOffering.course.course_img_url" class="image">
 
@@ -37,7 +39,7 @@ export default {
   mounted() {
     getList(this.$store.getters.token).then(
       response => {
-        this.courseOfferings = response.data
+        this.courseOfferings = JSON.parse(response.data.courseOfferingList)
       }
     )
   }
@@ -45,29 +47,29 @@ export default {
 </script>
 
 <style scoped>
-  #app{
+  #app {
     padding: 20px;
   }
 
-.text {
-  font-size: 14px;
-}
+  .text {
+    font-size: 14px;
+  }
 
-.item {
-  margin-bottom: 18px;
-}
+  .item {
+    margin-bottom: 18px;
+  }
 
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
 
-.clearfix:after {
-  clear: both;
-}
+  .clearfix:after {
+    clear: both;
+  }
 
-.box-card {
-  width: 480px;
-}
+  .box-card {
+    width: 480px;
+  }
 </style>

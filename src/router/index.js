@@ -58,36 +58,56 @@ export const constantRoutes = [
   {
     path: '/courseOffering',
     component: Layout,
+    redirect: '/courseOffering/index',
     children: [{
-      path: 'table',
+      path: 'index',
       name: 'courseOffering',
-      component: () => import('@/views/courseOffering'),
+      component: () => import('@/views/courseOffering/courseOffering'),
       meta: { title: '管理课堂', icon: 'table' }
+    },
+    {
+
+      path: 'detail/:id',
+      name: 'courseOfferingDetail',
+      component: () => import('@/views/courseOffering/courseOfferingDetail'),
+      meta: { title: '详情' },
+      hidden: true
+
     }]
   },
 
   {
     path: '/course',
-    component: Layout,
-    redirect: '/course/table',
+    component:
+Layout,
+    redirect:
+'/course/table',
     //  name: 'course',
     //  meta: { title: 'course', icon: 'example' },
-    children: [
-      {
-        path: 'table',
-        name: 'course',
-        component: () => import('@/views/course'),
-        meta: { title: '课程列表', icon: 'table' }
-      }
-    ]
+    children:
+[
+  {
+    path: 'table',
+    name: 'course',
+    component: () => import('@/views/course'),
+    meta: { title: '课程列表', icon: 'table' }
+  }
+]
   },
 
   {
     path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
+    component:
+  Layout,
+    redirect:
+  '/example/table',
+    name:
+  'Example',
+    meta:
+  {
+    title: 'Example', icon:
+    'example'
+  },
     children: [
       {
         path: 'table',
@@ -106,26 +126,33 @@ export const constantRoutes = [
 
   {
     path: '/form',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      }
-    ]
+    component:
+  Layout,
+    children:
+  [
+    {
+      path: 'index',
+      name: 'Form',
+      component: () => import('@/views/form/index'),
+      meta: { title: 'Form', icon: 'form' }
+    }
+  ]
   },
 
   {
     path: '/nested',
-    component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
+    component:
+  Layout,
+    redirect:
+  '/nested/menu1',
+    name:
+  'Nested',
+    meta:
+  {
+    title: 'Nested',
+    icon:
+    'nested'
+  },
     children: [
       {
         path: 'menu1',
@@ -177,17 +204,23 @@ export const constantRoutes = [
 
   {
     path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
+    component:
+  Layout,
+    children:
+  [
+    {
+      path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+      meta: { title: 'External Link', icon: 'link' }
+    }
+  ]
   },
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  {
+    path: '*', redirect:
+  '/404', hidden:
+  true
+  }
 ]
 
 const createRouter = () => new Router({
