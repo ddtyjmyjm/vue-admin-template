@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button type="primary">添加开课课程</el-button>
+    <el-button id="add_button" type="primary">添加开课课程</el-button>
     <div v-if="courseOfferings.length">
       <el-row :gutter="20">
 
@@ -11,7 +11,7 @@
             <el-card class="box-card" shadow="hover">
               <div slot="header" class="clearfix">
                 <span>{{ courseOffering.course.name }}</span>
-                <router-link :to="{ name: 'courseOfferingDetail', params: { id: courseOffering.course.id}}">
+                <router-link :to="{ name: 'courseOfferingDetail', params: { id: courseOffering.id}}">
                   详情
                 </router-link>
               </div>
@@ -57,6 +57,10 @@ export default {
 
   .item {
     margin-bottom: 18px;
+  }
+
+  #add_button {
+    padding: 10px
   }
 
   .clearfix:before,

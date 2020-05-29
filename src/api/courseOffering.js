@@ -5,8 +5,6 @@ export function getList(id) {
     url: '/teacher/listOfferingCourses/' + id,
     method: 'get'
   })
-  // return axios
-  //  .get('http://localhost:8080/teacher/listOfferingCourses/' + id)
 }
 
 export function getDetail(co_id) {

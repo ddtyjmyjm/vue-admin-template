@@ -1,4 +1,5 @@
 <template>
+
   <div>
 
     <div class="filter-container">
@@ -19,8 +20,7 @@
     <div v-if="resources!==[]">
       <el-table :data="resources" style="width: 100%">
         <el-table-column prop="chapter" align="center" label="章节" />
-        <el-table-column prop="resourceName" align="center" label="文件名" width="100px" />
-        <el-table-column prop="resourceType" align="center" label="文件类型" />
+        <el-table-column prop="resourceName" align="center" label="测试题描述" width="100px" />
         <el-table-column label="操作" width="200px">
           <template>
             <el-button type="primary" size="mini">
@@ -30,7 +30,6 @@
         </el-table-column>
       </el-table>
     </div>
-
   </div>
 
 </template>
@@ -38,7 +37,7 @@
 <script>
 import { getResources } from '@/api/courseOffering'
 export default {
-  name: 'Resources',
+  name: 'Tests',
   props: {
     coId: Number
   },
