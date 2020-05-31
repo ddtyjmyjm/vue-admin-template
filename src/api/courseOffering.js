@@ -26,3 +26,11 @@ export function getStudents(co_id) {
     method: 'get'
   })
 }
+
+export function offerCourse(data) {
+  return request({
+    url: '/teacher/offerCourse',
+    method: 'post',
+    data
+  })
+}

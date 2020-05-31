@@ -27,13 +27,16 @@
       <el-table-column prop="id" align="center" label="id" width="50px" />
       <el-table-column prop="name" align="center" label="课程名" width="100px" />
       <el-table-column prop="description" label="课程描述" />
-      <el-table-column label="操作" width="200px">
-        <template slot-scope="{row,$index}">
+      <el-table-column label="操作" width="300px">
+        <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
-          <el-button v-if="row.status!=='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
+          <el-button size="mini" type="danger" @click="handleDelete(row)">
             删除
+          </el-button>
+          <el-button type="primary" size="mini" @click="handleOffer(row)">
+            开课
           </el-button>
         </template>
       </el-table-column>
@@ -65,10 +68,22 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
+        <el-button @click="dialog.formVisible = false">
           取消
         </el-button>
         <el-button type="primary" @click="dialog.dialogStatus==='create'?createData():updateData()">
+          确认
+        </el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="'开课:'+offer.course_name" :visible.sync="offer.formVisible" width="30%">
+      <el-input-number v-model="offer.num" size="mini" />
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelOffer">
+          取消
+        </el-button>
+        <el-button type="primary" @click="createOffer">
           确认
         </el-button>
       </div>
@@ -79,6 +94,7 @@
 
 <script>
 import { findAll, findByName, findById, createCourse, updateCourse, deleteCourseList } from '@/api/course'
+import { offerCourse } from '@/api/courseOffering'
 
 export default {
   name: 'Course',
@@ -108,6 +124,13 @@ export default {
       rules: {
         name: [{ required: true, message: '需要有名字', trigger: 'blur' }]
       }
+    },
+    offer: {
+      formVisible: false,
+      course_id: null,
+      course_name: null,
+      teacher_id: null,
+      num: 1
     }
 
   }),
@@ -203,15 +226,44 @@ export default {
         }
       })
     },
-    handleDelete(row, index) {
+    handleDelete(row) {
       deleteCourseList([row.id])
+      this.getList()
       this.$notify({
         title: '成功',
         message: '删除成功',
         type: 'success',
         duration: 2000
       })
-      this.courseList.splice(index, 1)
+    },
+    handleOffer(row) {
+      this.offer.course_id = row.id
+      this.offer.course_name = row.name
+      this.offer.teacher_id = this.$store.getters.token
+      this.offer.formVisible = true
+    },
+    createOffer() {
+      offerCourse({
+        course_id: this.offer.course_id,
+        teacher_id: parseInt(this.offer.teacher_id),
+        num: this.offer.num
+      }).then(() => {
+        this.$notify({
+          title: '成功',
+          message: '删除成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.cancelOffer()
+      }
+      )
+    },
+    cancelOffer() {
+      this.offer.formVisible = false
+      this.offer.course_name = null
+      this.offer.course_id = null
+      this.offer.teacher_id = null
+      this.offer.num = 1
     }
   }
 }
