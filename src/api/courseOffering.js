@@ -27,6 +27,20 @@ export function getStudents(co_id) {
   })
 }
 
+export function getStudentsAndProcess(co_id) {
+  return request({
+    url: '/teacher/findStudentsWrap/' + co_id,
+    method: 'get'
+  })
+}
+export function addStudents(data) {
+  return request({
+    url: '/teacher/addCourseOfferingStudents',
+    method: 'post',
+    data
+  })
+}
+
 export function offerCourse(data) {
   return request({
     url: '/teacher/offerCourse',
