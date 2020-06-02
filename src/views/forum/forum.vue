@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app-container">
     <div class="filter-container">
       <el-input
         v-model="input"
@@ -15,14 +15,14 @@
       </el-button>
     </div>
 
-    <el-table :data="article" style="width: 100%">
+    <el-table :data="articles" style="width: 100%">
       <el-table-column prop="id" align="center" label="id" width="50px" />
-      <el-table-column prop="nickname" align="center" label="发帖者" width="100px" />
-      <el-table-column prop="tittle" label="标题" />
+      <el-table-column prop="title" label="标题" />
+      <el-table-column prop="create_time" label="创建时间" />
       <el-table-column label="操作" width="200px">
-        <template>
+        <template slot-scope="{row}">
           <el-button type="primary" size="mini">
-            <router-link to="/courseOffering/article/1">
+            <router-link :to="{ name: 'article', params: { id: row.id}}">
               详情
             </router-link>
           </el-button>
@@ -33,23 +33,29 @@
 </template>
 
 <script>
-import article from '@/views/courseOffering/components/article'
+import { findAll } from '@/api/forum'
 export default {
   name: 'Forum',
   data: () => {
     return {
-      article: [
+      input: '',
+      articles: [
         {
-          id: 1,
-          nickname: '小明',
-          tittle: '我有一个问题'
-        },
-        {
-          id: 2,
-          nickname: '磊磊',
-          tittle: '请问考试是什么时候'
+          id: null,
+          title: ''
         }
       ]
+    }
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    getList() {
+      findAll().then(response => {
+        console.log(response.data)
+        this.articles = JSON.parse(response.data.articleList)
+      })
     }
   }
 }

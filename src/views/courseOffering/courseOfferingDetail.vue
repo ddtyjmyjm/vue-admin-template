@@ -18,9 +18,6 @@
       <el-tab-pane label="试题管理" name="fourth">
         <div v-if="!loading"> <tests :co-id="courseOffering.id" /></div>
       </el-tab-pane>
-      <el-tab-pane label="讨论区" name="fifth">
-        <div v-if="!loading"><forum /></div>
-      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -30,7 +27,6 @@ import { getDetail } from '@/api/courseOffering'
 import showDetail from '@/views/courseOffering/components/detail'
 import resources from '@/views/courseOffering/components/resources'
 import students from '@/views/courseOffering/components/students'
-import forum from '@/views/courseOffering/components/forum'
 import tests from '@/views/courseOffering/components/tests'
 
 export default {
@@ -39,7 +35,6 @@ export default {
     showDetail: showDetail,
     resources: resources,
     students: students,
-    forum: forum,
     tests: tests
   },
   data: function() {

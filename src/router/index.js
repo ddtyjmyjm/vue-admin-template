@@ -71,12 +71,6 @@ export const constantRoutes = [
       component: () => import('@/views/courseOffering/courseOfferingDetail'),
       meta: { title: '详情' },
       hidden: true
-    }, {
-      path: 'article/1',
-      name: 'courseOfferingArticle',
-      component: () => import('@/views/courseOffering/components/article'),
-      meta: { title: '讨论' },
-      hidden: true
     }]
   },
 
@@ -100,23 +94,44 @@ export const constantRoutes = [
   },
 
   {
-    path: 'external-link',
+    path: '/forum',
     component:
     Layout,
+    redirect: '/forum/articles',
     children:
-      [
-        {
-          path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-          meta: { title: 'External Link', icon: 'link' }
-        }
-      ]
+      [{
+        path: 'articles',
+        name: 'forum',
+        component: () => import('@/views/forum/forum'),
+        meta: { title: '讨论区', icon: 'table' }
+      },
+      {
+        path: ':id',
+        name: 'article',
+        component: () => import('@/views/forum/article'),
+        meta: { title: '帖子详情' },
+        hidden: true
+      }]
+  },
+
+  {
+    path: 'external-link',
+    component:
+  Layout,
+    children:
+  [
+    {
+      path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+      meta: { title: 'External Link', icon: 'link' }
+    }
+  ]
   },
 
   // 404 page must be placed at the end !!!
   {
     path: '*', redirect:
-      '/404', hidden:
-      true
+  '/404', hidden:
+  true
   }
 ]
 

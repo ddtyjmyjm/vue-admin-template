@@ -8,7 +8,7 @@
       <p>{{ co.course.description }}</p>
     </el-card>
 
-    <el-row :gutter="32">
+    <el-row :gutter="20">
 
       <el-col :xs="24" :sm="24" :lg="12">
         <el-divider content-position="left">公告</el-divider>
@@ -47,7 +47,7 @@ export default {
 }
 </script>
 <style>
-  .box-card{
+  .box-card {
     margin: 15px;
   }
 

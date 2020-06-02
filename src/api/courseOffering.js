@@ -20,6 +20,14 @@ export function getResources(co_id) {
     method: 'get'
   })
 }
+
+export function getTests(co_id) {
+  return request({
+    url: '/teacher/findTest/' + co_id,
+    method: 'get'
+  })
+}
+
 export function getStudents(co_id) {
   return request({
     url: '/courseoffering/findStudentsWrap/' + co_id,
